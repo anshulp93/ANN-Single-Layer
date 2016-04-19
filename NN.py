@@ -2,6 +2,10 @@ from scipy.io.arff import loadarff
 import sys
 import math
 import random
+import matplotlib
+import matplotlib.pyplot as plt
+
+matplotlib.interactive(True)
 
 weights = []
 bias = 0.1
@@ -94,6 +98,7 @@ def train_classify(train_data,learning_rate,num_epochs,test_data,bias, weights):
 			tv.append(classes[0])		
 		tv.append(t[-1])
 		tv.append(act)
+		# tv contains [instance_id,prediction,actual class,activation/confidence]
 		test_set.append(tv)
 	return test_set				
 	
@@ -105,7 +110,7 @@ if __name__ == "__main__":
 
 	#Parse file to get features and  attributes
 	attributes = []
-	train_data, train_meta = loadarff("sonar.arff")
+	train_data, train_meta = loadarff(train_file)
 	table = [list(i) for i in train_data]
 	att_names = train_meta.names()
 	classes = list(train_meta.__getitem__(att_names[-1])[1])
@@ -150,7 +155,7 @@ if __name__ == "__main__":
 	#print(table)
 	
 	
-	# Sort classify by id and print accuracy
+	# Sort classify by id and generate trace for printing
 	output = sorted(classify,key =  lambda a: a[0])
 	roc_table = sorted(classify, key = lambda a: -a[3])
 	classifications = len(classify)
@@ -167,9 +172,46 @@ if __name__ == "__main__":
 		inst.append(p[3])
 		printtrace.append(inst)
 		
-	print(100*right/classifications)	
-	print(len(classify))
-	print(len(printtrace))
+	# Generate points for TPR and FPR	
+	pos = 0
+	neg = 0
+	for i in roc_table:
+		if i[2]==classes[0]:
+			neg=neg+1
+		else:
+			pos=pos+1	
+	roc_all = []
+	nr_pos = 0.0
+	nr_neg = 0.0
+	for i in roc_table:
+		ins = []
+		if i[2]==classes[0]:
+			nr_neg=nr_neg+1
+		else:
+			nr_pos=nr_pos+1
+		ins.append(nr_pos/pos)
+		ins.append(nr_neg/neg)
+		roc_all.append(ins)		
+	
+	# Print Trace		
+	#print(100*right/classifications)	
+	#print(len(classify))
+	#print(len(printtrace))
 	#print(classify)
-	print(printtrace)
-	print(roc_table)
+	#print(printtrace)
+	for tr in printtrace:
+		for t in tr:
+			print t,
+		print("")	
+	
+	#Code for RoC Plot
+	#print(roc_all)
+	y = [i[0] for i in roc_all]
+	x = [i[1] for i in roc_all]
+	plt.plot(x,y,'ro')
+	plt.ylabel('TPR')
+	plt.xlabel('FPR')
+	plt.title("ROC Curve")
+	plt.show()
+	plt.savefig("Roc.png")
+	#print("Generated graph")
