@@ -23,8 +23,8 @@ def partition(folds):
 	
 	pos_per = len(pos)/folds
 	neg_per = len(neg)/folds
-	print(pos_per)
-	print(neg_per)
+	#print(pos_per)
+	#print(neg_per)
 	
 	for i in range(0,folds):
 		pos_sam = random.sample(pos,pos_per)
@@ -134,19 +134,42 @@ if __name__ == "__main__":
 		train_data.remove(test_data)
 		res = train_classify(train_data,learning_rate,num_epochs,test_data,bias,weights)
 		train_data.insert(i,test_data)
-		classify.append(res)
+		for en in res:
+			classify.append(en)
 		weights = []
 		 
 	#print(att_names)
 	#print(classes)
 	#print(mapping)
-	print(len(partitions))
-	print(len(partitions[0]))
-	print(partitions[0])
-	print(len(mapping))
-	print(mapping)
-	'''print(expected)
-	print(table)
-	'''
-
+	#print(len(partitions))
+	#print(len(partitions[0]))
+	#print(partitions[0])
+	#print(len(mapping))
+	#print(mapping)
+	#print(expected)
+	#print(table)
 	
+	
+	# Sort classify by id and print accuracy
+	output = sorted(classify,key =  lambda a: a[0])
+	roc_table = sorted(classify, key = lambda a: -a[3])
+	classifications = len(classify)
+	right = 0.0
+	for i in output:
+		if i[1]==i[2]:
+			right=right+1
+	printtrace = []
+	for p in output:
+		inst = []
+		inst.append(mapping[p[0]])
+		inst.append(p[1])
+		inst.append(p[2])
+		inst.append(p[3])
+		printtrace.append(inst)
+		
+	print(100*right/classifications)	
+	print(len(classify))
+	print(len(printtrace))
+	#print(classify)
+	print(printtrace)
+	print(roc_table)
