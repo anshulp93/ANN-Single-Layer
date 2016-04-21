@@ -5,7 +5,7 @@ import random
 import matplotlib
 import matplotlib.pyplot as plt
 
-matplotlib.interactive(True)
+matplotlib.interactive(False)
 
 weights = []
 bias = 0.1
@@ -212,6 +212,6 @@ if __name__ == "__main__":
 	plt.ylabel('TPR')
 	plt.xlabel('FPR')
 	plt.title("ROC Curve")
-	plt.show()
+	#plt.show()
 	plt.savefig("Roc.png")
 	#print("Generated graph")
