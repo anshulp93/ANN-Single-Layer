@@ -208,10 +208,10 @@ if __name__ == "__main__":
 	#print(roc_all)
 	y = [i[0] for i in roc_all]
 	x = [i[1] for i in roc_all]
-	plt.plot(x,y,'ro')
-	plt.ylabel('TPR')
-	plt.xlabel('FPR')
-	plt.title("ROC Curve")
+	#plt.plot(x,y,'ro')
+	#plt.ylabel('TPR')
+	#plt.xlabel('FPR')
+	#plt.title("ROC Curve")
 	#plt.show()
-	plt.savefig("Roc.png")
+	#plt.savefig("Roc.png")
 	#print("Generated graph")
